@@ -15,6 +15,11 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
+        .repertoire-enter { animation: slideDown 0.3s ease-out forwards; }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
@@ -23,7 +28,7 @@
     <script type="text/babel">
         const { useState, useMemo, useEffect } = React;
 
-        // Ícones via Lucide
+        // Componente de Ícone para Lucide
         const Icon = ({ name, className }) => {
             useEffect(() => {
                 if (window.lucide) {
@@ -37,20 +42,54 @@
             const [searchTerm, setSearchTerm] = useState('');
             const [activeTab, setActiveTab] = useState('vocal');
             const [currentMonth, setCurrentMonth] = useState(0);
-            const [selectedRepertoire, setSelectedRepertoire] = useState(null);
+            const [selectedDate, setSelectedDate] = useState(null);
 
             const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho"];
 
-            // Dados do Repertório (Mapeados pelo Bloco/Data)
-            const songs = {
-                "1": { inv: "Hino 03 / 04", con: "Hino 54", ofe: "Hino 33 / 34", c1: "Quebrantado", c2: "Cantai ao Senhor", fam: "A Ele a glória" },
-                "2": { inv: "Hino 06 / 10", con: "Hino 67", ofe: "Hino 47 / 56", c1: "Nosso louvor", c2: "É teu povo", fam: "Isaías 53" },
-                "3": { inv: "Hino 11 / 13", con: "Hino 68", ofe: "Hino 58 / 60", c1: "Sola fide", c2: "Bondade de Deus", fam: "Mil motivos" },
-                "4": { inv: "Hino 14 / 17", con: "Hino 69", ofe: "Hino 62 / 63", c1: "Ajuntamento", c2: "Irresistível graça", fam: "Te agradeço" },
-                "5": { inv: "Hino 18 / 19", con: "Hino 70", ofe: "Hino 64 / 92", c1: "Efésios 1", c2: "-", fam: "Jacó" },
+            // Dados de Repertório com links do YouTube
+            const blocks = {
+                "1": { 
+                    inv: "Hino 03 / 04", 
+                    con: "Hino 54", 
+                    ofe: "Hino 33 / 34", 
+                    c1: { name: "Quebrantado", link: "https://www.youtube.com/watch?v=QbnmpJo3DiI" }, 
+                    c2: { name: "Cantai ao Senhor", link: "https://www.youtube.com/watch?v=hCeI1mqTiEk" }, 
+                    fam: { name: "A Ele a glória", link: "https://www.youtube.com/watch?v=Z-4MrVLdAC0" } 
+                },
+                "2": { 
+                    inv: "Hino 06 / 10", 
+                    con: "Hino 67", 
+                    ofe: "Hino 47 / 56", 
+                    c1: { name: "Nosso louvor", link: "https://www.youtube.com/watch?v=ndylbwwJC-4" }, 
+                    c2: { name: "É teu povo", link: "https://www.youtube.com/watch?v=ySOVyOvwOtE" }, 
+                    fam: { name: "Isaías 53", link: "https://www.youtube.com/watch?v=g7zA1L96-pU" } 
+                },
+                "3": { 
+                    inv: "Hino 11 / 13", 
+                    con: "Hino 68", 
+                    ofe: "Hino 58 / 60", 
+                    c1: { name: "Sola fide", link: "https://www.youtube.com/watch?v=kpDHGsVv2NM" }, 
+                    c2: { name: "Bondade de Deus", link: "https://www.youtube.com/watch?v=esodHzEXUrE" }, 
+                    fam: { name: "Mil motivos", link: "https://www.youtube.com/watch?v=IhQlArzkCLU" } 
+                },
+                "4": { 
+                    inv: "Hino 14 / 17", 
+                    con: "Hino 69", 
+                    ofe: "Hino 62 / 63", 
+                    c1: { name: "Ajuntamento", link: "https://www.youtube.com/watch?v=f7XP_9JobKY" }, 
+                    c2: { name: "Irresistível graça", link: "https://www.youtube.com/watch?v=juUSnwuXJaY" }, 
+                    fam: { name: "Te agradeço", link: null } 
+                },
+                "5": { 
+                    inv: "Hino 18 / 19", 
+                    con: "Hino 70", 
+                    ofe: "Hino 64 / 92", 
+                    c1: { name: "Efésios 1", link: "https://www.youtube.com/watch?v=9Q2WJlEnLsw" }, 
+                    c2: { name: "-", link: null }, 
+                    fam: { name: "Jacó", link: "https://www.youtube.com/watch?v=2BkIq1M9tAo" } 
+                },
             };
 
-            // Escala com Revezamento e Repertório
             const vocalSchedule = [
                 { date: "04/01", team: "Vocal 1", members: ["Sofia", "Zaqueu", "Lena", "Noeme"], block: "1" },
                 { date: "11/01", team: "Vocal 2", members: ["Ana Júlia", "João Pedro", "Karina", "Samara"], block: "2" },
@@ -80,18 +119,19 @@
                 { date: "28/06", team: "Vocal 2", members: ["Ana Júlia", "João Pedro", "Karina", "Samara"], block: "1" },
             ];
 
-            const instrumentalSchedule = [
-                { date: "04/01", items: { Guitarra: "Alan", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Jefferson" } },
-                { date: "11/01", items: { Guitarra: "Almir", Baixo: "Thiago", Bateria: "Alan", Teclado: "Filipe", Violão: "Jefferson" } },
-                { date: "18/01", items: { Guitarra: "Eduardo", Baixo: "João Pedro", Bateria: "Pedro H.", Teclado: "Déborah", Violão: "Jefferson" } },
-                { date: "25/01", items: { Guitarra: "Eduardo", Baixo: "Alan", Bateria: "Elieudene", Teclado: "Filipe", Violão: "Jefferson" } },
+            // Escala Instrumental Jan 2026 (Atualizada conforme solicitado)
+            const instrumentalJan = [
+                { date: "04/01", items: { Guitarra: "Almir", Baixo: "João Pedro", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Alan" } },
+                { date: "11/01", items: { Guitarra: "Alan", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Jefferson" } },
+                { date: "18/01", items: { Guitarra: "Eduardo", Baixo: "Thiago", Bateria: "Pedro Henrique", Teclado: "Déborah", Violão: "Jefferson" } },
+                { date: "25/01", items: { Guitarra: "Alan", Baixo: "João Pedro", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Eduardo" } },
             ];
 
             const filteredVocal = useMemo(() => {
                 return vocalSchedule.filter(item => {
-                    const monthIndex = parseInt(item.date.split('/')[1]) - 1;
-                    const matchesMonth = monthIndex === currentMonth;
-                    const matchesSearch = searchTerm === '' ||
+                    const mIdx = parseInt(item.date.split('/')[1]) - 1;
+                    const matchesMonth = mIdx === currentMonth;
+                    const matchesSearch = searchTerm === '' || 
                         item.members.some(m => m.toLowerCase().includes(searchTerm.toLowerCase()));
                     return matchesMonth && matchesSearch;
                 });
@@ -99,31 +139,54 @@
 
             const filteredInstrumental = useMemo(() => {
                 if (currentMonth !== 0) return [];
-                return instrumentalSchedule.filter(item => {
+                return instrumentalJan.filter(item => {
                     return searchTerm === '' || Object.values(item.items).some(val => val.toLowerCase().includes(searchTerm.toLowerCase()));
                 });
             }, [currentMonth, searchTerm]);
 
+            const SongItem = ({ label, song }) => {
+                if (!song) return null;
+                const name = typeof song === 'string' ? song : song.name;
+                const link = song.link;
+
+                return (
+                    <div className="flex justify-between items-center group/song">
+                        <span className="text-indigo-400">{label}:</span> 
+                        {link ? (
+                            <a 
+                                href={link} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="flex items-center gap-1.5 hover:text-indigo-600 transition-colors cursor-pointer"
+                            >
+                                <span className="underline decoration-indigo-200 underline-offset-2">{name}</span>
+                                <Icon name="play-circle" className="w-3 h-3 text-red-500 opacity-70 group-hover/song:opacity-100" />
+                            </a>
+                        ) : (
+                            <span>{name}</span>
+                        )}
+                    </div>
+                );
+            };
+
             return (
-                <div className="min-h-screen pb-12 flex flex-col">
+                <div className="min-h-screen flex flex-col">
                     <header className="bg-indigo-700 text-white p-6 shadow-xl relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-indigo-800 to-indigo-600 opacity-50"></div>
+                        <div className="absolute top-0 left-0 w-full h-full bg-indigo-900/40"></div>
                         <div className="max-w-4xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
                             <div>
-                                <h1 className="text-3xl font-bold flex items-center gap-2 tracking-tight">
-                                    <Icon name="music" className="w-8 h-8 text-indigo-200" />
+                                <h1 className="text-3xl font-black tracking-tight flex items-center gap-2">
+                                    <Icon name="music" className="w-8 h-8 text-indigo-300" />
                                     Louvor 2026
                                 </h1>
-                                <p className="text-indigo-100 text-sm mt-1 font-medium flex items-center gap-1">
-                                    <Icon name="calendar" className="w-3 h-3" /> Gestão de Escalas e Repertório
-                                </p>
+                                <p className="text-indigo-100 text-sm font-medium">Gestão de Escalas e Repertório</p>
                             </div>
                             <div className="relative">
                                 <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-300" />
-                                <input
-                                    type="text"
-                                    placeholder="Quem você está buscando?"
-                                    className="bg-white/10 border border-white/20 rounded-full py-2.5 pl-10 pr-4 text-sm w-full md:w-64 focus:outline-none focus:ring-2 focus:ring-white/50 text-white placeholder:text-indigo-200"
+                                <input 
+                                    type="text" 
+                                    placeholder="Buscar por nome..." 
+                                    className="bg-white/10 border border-white/20 rounded-full py-2.5 pl-10 pr-4 text-sm w-full md:w-64 focus:outline-none focus:ring-2 focus:ring-indigo-300 text-white placeholder:text-indigo-200"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                 />
@@ -131,7 +194,8 @@
                         </div>
                     </header>
 
-                    <main className="max-w-4xl mx-auto px-4 mt-8 w-full">
+                    <main className="max-w-4xl mx-auto px-4 mt-8 w-full flex-grow">
+                        {/* Abas */}
                         <div className="flex bg-white p-1 rounded-2xl shadow-sm mb-8 border border-slate-200">
                             <button onClick={() => setActiveTab('vocal')} className={`flex-1 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${activeTab === 'vocal' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500 hover:bg-slate-50'}`}>
                                 <Icon name="users" className="w-5 h-5" /> Vocal
@@ -141,33 +205,35 @@
                             </button>
                         </div>
 
+                        {/* Navegação de Mês */}
                         <div className="flex items-center justify-between mb-8 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                            <button onClick={() => setCurrentMonth(p => Math.max(0, p-1))} className="p-3 hover:bg-slate-100 rounded-full transition-colors" disabled={currentMonth===0}>
+                            <button onClick={() => setCurrentMonth(p => Math.max(0, p-1))} className="p-2 hover:bg-slate-100 rounded-full" disabled={currentMonth===0}>
                                 <Icon name="chevron-left" className="w-6 h-6" />
                             </button>
-                            <h2 className="text-2xl font-black text-indigo-900 tracking-tighter uppercase">{months[currentMonth]}</h2>
-                            <button onClick={() => setCurrentMonth(p => Math.min(5, p+1))} className="p-3 hover:bg-slate-100 rounded-full transition-colors" disabled={currentMonth===5}>
+                            <h2 className="text-xl font-black text-indigo-900 uppercase tracking-widest">{months[currentMonth]}</h2>
+                            <button onClick={() => setCurrentMonth(p => Math.min(5, p+1))} className="p-2 hover:bg-slate-100 rounded-full" disabled={currentMonth===5}>
                                 <Icon name="chevron-right" className="w-6 h-6" />
                             </button>
                         </div>
 
                         {activeTab === 'vocal' ? (
                             <div className="grid gap-6 md:grid-cols-2">
-                                {filteredVocal.map((item, idx) => {
+                                {filteredVocal.length > 0 ? filteredVocal.map((item, idx) => {
                                     const hasIsaura = item.members.includes("Isaura");
                                     const rehearsal = hasIsaura ? "Terça anterior ao domingo" : "Sexta às 20:30";
-                                    const repertoire = songs[item.block] || {};
+                                    const rep = blocks[item.block] || {};
+                                    const isOpen = selectedDate === item.date;
 
                                     return (
-                                        <div key={idx} className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden flex flex-col group hover:shadow-xl transition-all border-l-4 border-l-indigo-600">
+                                        <div key={idx} className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden flex flex-col border-l-4 border-l-indigo-600 hover:shadow-md transition-shadow">
                                             <div className="bg-slate-50 px-6 py-4 border-b border-slate-100 flex justify-between items-center">
                                                 <div>
                                                     <span className="font-black text-2xl text-slate-800">{item.date}</span>
-                                                    <p className="text-[10px] font-bold text-indigo-500 uppercase">{item.team}</p>
+                                                    <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-tighter">{item.team}</p>
                                                 </div>
-                                                <button
-                                                    onClick={() => setSelectedRepertoire(selectedRepertoire === item.date ? null : item.date)}
-                                                    className="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-full text-xs font-bold hover:bg-indigo-200 transition-colors flex items-center gap-2"
+                                                <button 
+                                                    onClick={() => setSelectedDate(isOpen ? null : item.date)}
+                                                    className={`px-4 py-2 rounded-full text-xs font-bold transition-colors flex items-center gap-2 ${isOpen ? 'bg-indigo-600 text-white' : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'}`}
                                                 >
                                                     <Icon name="list-music" className="w-4 h-4" /> Repertório
                                                 </button>
@@ -175,27 +241,34 @@
                                             <div className="p-6">
                                                 <div className="grid grid-cols-2 gap-3 mb-6">
                                                     {item.members.map((m, i) => (
-                                                        <div key={i} className="flex items-center gap-2 text-sm bg-slate-50 p-3 rounded-2xl border border-slate-100 font-medium">
-                                                            <div className="w-2 h-2 rounded-full bg-indigo-400"></div>
+                                                        <div key={i} className="flex items-center gap-2 text-sm bg-slate-50 p-3 rounded-2xl border border-slate-100 font-semibold text-slate-700">
+                                                            <Icon name="user" className="w-3.5 h-3.5 text-indigo-400" />
                                                             <span className="truncate">{m}</span>
                                                         </div>
                                                     ))}
                                                 </div>
 
-                                                {selectedRepertoire === item.date && (
-                                                    <div className="bg-indigo-50/50 p-4 rounded-2xl mb-4 border border-indigo-100 animate-in fade-in slide-in-from-top-2 duration-300">
-                                                        <h4 className="text-[10px] font-black text-indigo-600 uppercase mb-3 tracking-widest">Músicas do Dia (Bloco {item.block})</h4>
-                                                        <div className="space-y-2 text-xs font-semibold text-slate-700">
-                                                            <p><span className="text-indigo-400 mr-2">Invoc:</span> {repertoire.inv}</p>
-                                                            <p><span className="text-indigo-400 mr-2">Contri:</span> {repertoire.con}</p>
-                                                            <p><span className="text-indigo-400 mr-2">Ofert:</span> {repertoire.ofe}</p>
-                                                            <p><span className="text-indigo-400 mr-2">Cant 1:</span> {repertoire.c1}</p>
-                                                            <p><span className="text-indigo-400 mr-2">Cant 2:</span> {repertoire.c2}</p>
-                                                            <p><span className="text-indigo-400 mr-2">Família:</span> {repertoire.fam}</p>
+                                                {isOpen && (
+                                                    <div className="mb-6 p-4 bg-indigo-50/50 rounded-2xl border border-indigo-100 repertoire-enter">
+                                                        <div className="flex justify-between items-center border-b border-indigo-200 pb-1 mb-3">
+                                                            <h4 className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">Músicas (Bloco {item.block})</h4>
+                                                            <div className="flex items-center gap-1 text-[8px] text-red-500 font-bold">
+                                                                <Icon name="play-circle" className="w-2.5 h-2.5" /> LINK YOUTUBE
+                                                            </div>
+                                                        </div>
+                                                        <div className="space-y-2 text-xs font-bold text-slate-600">
+                                                            <SongItem label="Invoc" song={rep.inv} />
+                                                            <SongItem label="Contri" song={rep.con} />
+                                                            <SongItem label="Ofert" song={rep.ofe} />
+                                                            <SongItem label="Cant 1" song={rep.c1} />
+                                                            <SongItem label="Cant 2" song={rep.c2} />
+                                                            <div className="border-t border-indigo-100 pt-1 mt-1">
+                                                                <SongItem label="Família" song={rep.fam} />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 )}
-
+                                                
                                                 <div className={`mt-auto pt-4 border-t border-slate-100 text-[11px] font-bold flex items-center gap-2 ${hasIsaura ? 'text-amber-600' : 'text-slate-400'}`}>
                                                     <Icon name="clock" className="w-3.5 h-3.5" />
                                                     Ensaio: {rehearsal}
@@ -203,26 +276,26 @@
                                             </div>
                                         </div>
                                     );
-                                })}
+                                }) : (
+                                    <div className="col-span-full py-16 text-center text-slate-300 italic">Nenhuma escala para este mês.</div>
+                                )}
                             </div>
                         ) : (
+                            /* Instrumental */
                             <div className="space-y-6">
                                 {currentMonth === 0 ? filteredInstrumental.map((item, idx) => (
-                                    <div key={idx} className="bg-white rounded-3xl shadow-sm border border-slate-200 p-8 hover:shadow-lg transition-all">
+                                    <div key={idx} className="bg-white rounded-3xl shadow-sm border border-slate-200 p-8">
                                         <div className="flex items-center gap-4 mb-8">
-                                            <div className="bg-indigo-600 text-white w-14 h-14 rounded-2xl flex flex-col items-center justify-center shadow-lg">
-                                                <span className="text-[10px] font-bold">JAN</span>
-                                                <span className="text-xl font-black">{item.date.split('/')[0]}</span>
+                                            <div className="bg-indigo-600 text-white w-14 h-14 rounded-2xl flex flex-col items-center justify-center font-bold">
+                                                <span className="text-xs">DOM</span>
+                                                <span className="text-xl">{item.date.split('/')[0]}</span>
                                             </div>
-                                            <div>
-                                                <h3 className="font-black text-xl text-slate-800">Banda Instrumental</h3>
-                                                <p className="text-sm text-slate-400 font-medium italic">Ensaio de Sexta - 20:30</p>
-                                            </div>
+                                            <h3 className="font-black text-xl text-slate-800 uppercase tracking-tight">Instrumental</h3>
                                         </div>
-                                        <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+                                        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                                             {Object.entries(item.items).map(([role, member], ri) => (
                                                 <div key={ri} className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                                                    <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-1">{role}</p>
+                                                    <p className="text-[10px] font-bold text-indigo-400 uppercase mb-1">{role}</p>
                                                     <p className="text-sm font-black text-slate-700">{member}</p>
                                                 </div>
                                             ))}
@@ -230,44 +303,39 @@
                                     </div>
                                 )) : (
                                     <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200">
-                                        <Icon name="calendar-days" className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-                                        <p className="text-slate-400 font-medium">Aguardando definição da banda para {months[currentMonth]}.</p>
+                                        <p className="text-slate-400">Instrumental disponível apenas para Janeiro.</p>
                                     </div>
                                 )}
                             </div>
                         )}
 
+                        {/* Seção de Regras e Avisos */}
                         <div className="mt-12 grid gap-6 md:grid-cols-2">
-                             {/* Notas de Substituição */}
                             <div className="bg-amber-50 rounded-3xl p-8 border border-amber-100">
                                 <div className="flex items-center gap-3 mb-4 text-amber-700">
                                     <Icon name="alert-triangle" className="w-6 h-6" />
-                                    <h3 className="text-lg font-black uppercase tracking-tight">Imprevistos e Faltas</h3>
+                                    <h3 className="text-lg font-black uppercase">IMPREVISTOS E FALTAS</h3>
                                 </div>
-                                <p className="text-sm text-amber-800 leading-relaxed font-medium">
-                                    Aquele que não puder estar na escala, <strong>procure outra pessoa para o substituir</strong>. Após encontrar o substituto, informe para a liderança que não poderá estar e comunique quem irá no seu lugar (ex: "Fulano irá me substituir").
+                                <p className="text-sm text-amber-900 leading-relaxed font-medium">
+                                    Se você não puder estar no dia escalado, <strong>procure outra pessoa para o substituir</strong>. Após encontrar, informe a liderança sobre a mudança (ex: "Não poderei estar, Fulano me substituirá").
                                 </p>
                             </div>
 
-                            {/* Informativo */}
-                            <div className="bg-indigo-900 rounded-3xl p-8 text-white relative overflow-hidden shadow-2xl">
-                                <div className="relative z-10">
-                                    <div className="flex items-center gap-3 mb-4 text-indigo-300">
-                                        <Icon name="info" className="w-6 h-6" />
-                                        <h3 className="text-lg font-black uppercase tracking-tight">Orientações Gerais</h3>
-                                    </div>
-                                    <ul className="text-xs space-y-3 font-medium opacity-90 list-disc list-inside">
-                                        <li><strong>Instrumental:</strong> chegar alguns minutos antes para montar o equipamento. Às 20h30 iniciaremos o ensaio com a passagem das músicas.</li>
-                                    </ul>
+                            <div className="bg-indigo-900 rounded-3xl p-8 text-white">
+                                <div className="flex items-center gap-3 mb-4 text-indigo-300">
+                                    <Icon name="info" className="w-6 h-6" />
+                                    <h3 className="text-lg font-black uppercase">ORIENTAÇÕES GERAIS</h3>
                                 </div>
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl"></div>
+                                <ul className="text-xs space-y-3 font-medium opacity-90 list-disc list-inside">
+                                    <li><strong>Instrumental:</strong> chegar alguns minutos antes para montar o equipamento. Às 20h30 iniciaremos o ensaio com a passagem das músicas.</li>
+                                </ul>
                             </div>
                         </div>
                     </main>
 
-                    <footer className="mt-auto py-12 text-center text-slate-400 px-6">
-                        <p className="text-xs font-bold uppercase tracking-widest text-slate-300 mb-2">© 2026 Departamento de Música</p>
-                        <p className="text-sm font-medium italic italic">"Tudo quanto fizerdes, fazei-o de todo o coração, como ao Senhor..." Colossenses 3:23</p>
+                    <footer className="py-12 text-center text-slate-400">
+                        <p className="text-xs font-bold uppercase tracking-widest text-slate-300">© 2026 Departamento de Música</p>
+                        <p className="text-sm italic mt-1 px-4">"Tudo quanto fizerdes, fazei-o de todo o coração, como ao Senhor..." Colossenses 3:23</p>
                     </footer>
                 </div>
             );
