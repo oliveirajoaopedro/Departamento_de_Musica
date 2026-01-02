@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Louvor 2026</title>
+    <title>2026 Departamento de Música PIPP</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- React & Babel -->
@@ -13,7 +13,7 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
         body { font-family: 'Inter', sans-serif; }
         .repertoire-enter { animation: slideDown 0.3s ease-out forwards; }
         @keyframes slideDown {
@@ -90,6 +90,16 @@
                 },
             };
 
+            // Mapeamento de Hinos da Ceia (Primeiro domingo de cada mês)
+            const ceiaHinos = {
+                "04/01": "Hino 266",
+                "01/02": "Hino 269",
+                "01/03": "", 
+                "05/04": "", 
+                "03/05": "", 
+                "07/06": ""  
+            };
+
             const vocalSchedule = [
                 { date: "04/01", team: "Vocal 1", members: ["Sofia", "Zaqueu", "Lena", "Noeme"], block: "1" },
                 { date: "11/01", team: "Vocal 2", members: ["Ana Júlia", "João Pedro", "Karina", "Samara"], block: "2" },
@@ -119,7 +129,7 @@
                 { date: "28/06", team: "Vocal 2", members: ["Ana Júlia", "João Pedro", "Karina", "Samara"], block: "1" },
             ];
 
-            // Escala Instrumental Jan 2026 (Atualizada conforme solicitado)
+            // Escala Instrumental Jan 2026
             const instrumentalJan = [
                 { date: "04/01", items: { Guitarra: "Almir", Baixo: "João Pedro", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Alan" } },
                 { date: "11/01", items: { Guitarra: "Alan", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Jefferson" } },
@@ -151,7 +161,7 @@
 
                 return (
                     <div className="flex justify-between items-center group/song">
-                        <span className="text-indigo-400">{label}:</span> 
+                        <span className="text-indigo-400 font-medium">{label}:</span> 
                         {link ? (
                             <a 
                                 href={link} 
@@ -195,7 +205,6 @@
                     </header>
 
                     <main className="max-w-4xl mx-auto px-4 mt-8 w-full flex-grow">
-                        {/* Abas */}
                         <div className="flex bg-white p-1 rounded-2xl shadow-sm mb-8 border border-slate-200">
                             <button onClick={() => setActiveTab('vocal')} className={`flex-1 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${activeTab === 'vocal' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500 hover:bg-slate-50'}`}>
                                 <Icon name="users" className="w-5 h-5" /> Vocal
@@ -205,13 +214,12 @@
                             </button>
                         </div>
 
-                        {/* Navegação de Mês */}
                         <div className="flex items-center justify-between mb-8 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                            <button onClick={() => setCurrentMonth(p => Math.max(0, p-1))} className="p-2 hover:bg-slate-100 rounded-full" disabled={currentMonth===0}>
+                            <button onClick={() => setCurrentMonth(p => Math.max(0, p-1))} className="p-2 hover:bg-slate-100 rounded-full transition-colors" disabled={currentMonth===0}>
                                 <Icon name="chevron-left" className="w-6 h-6" />
                             </button>
                             <h2 className="text-xl font-black text-indigo-900 uppercase tracking-widest">{months[currentMonth]}</h2>
-                            <button onClick={() => setCurrentMonth(p => Math.min(5, p+1))} className="p-2 hover:bg-slate-100 rounded-full" disabled={currentMonth===5}>
+                            <button onClick={() => setCurrentMonth(p => Math.min(5, p+1))} className="p-2 hover:bg-slate-100 rounded-full transition-colors" disabled={currentMonth===5}>
                                 <Icon name="chevron-right" className="w-6 h-6" />
                             </button>
                         </div>
@@ -222,13 +230,19 @@
                                     const hasIsaura = item.members.includes("Isaura");
                                     const rehearsal = hasIsaura ? "Terça anterior ao domingo" : "Sexta às 20:30";
                                     const rep = blocks[item.block] || {};
+                                    const ceiaHino = ceiaHinos[item.date];
                                     const isOpen = selectedDate === item.date;
 
                                     return (
                                         <div key={idx} className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden flex flex-col border-l-4 border-l-indigo-600 hover:shadow-md transition-shadow">
                                             <div className="bg-slate-50 px-6 py-4 border-b border-slate-100 flex justify-between items-center">
                                                 <div>
-                                                    <span className="font-black text-2xl text-slate-800">{item.date}</span>
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="font-black text-2xl text-slate-800">{item.date}</span>
+                                                        {ceiaHino !== undefined && (
+                                                            <span className="bg-amber-100 text-amber-700 text-[9px] font-black px-2 py-0.5 rounded-md uppercase border border-amber-200 shadow-sm">Ceia</span>
+                                                        )}
+                                                    </div>
                                                     <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-tighter">{item.team}</p>
                                                 </div>
                                                 <button 
@@ -240,12 +254,15 @@
                                             </div>
                                             <div className="p-6">
                                                 <div className="grid grid-cols-2 gap-3 mb-6">
-                                                    {item.members.map((m, i) => (
-                                                        <div key={i} className="flex items-center gap-2 text-sm bg-slate-50 p-3 rounded-2xl border border-slate-100 font-semibold text-slate-700">
-                                                            <Icon name="user" className="w-3.5 h-3.5 text-indigo-400" />
-                                                            <span className="truncate">{m}</span>
-                                                        </div>
-                                                    ))}
+                                                    {item.members.map((m, i) => {
+                                                        const isLeader = ['Lena', 'João Pedro', 'Almir'].includes(m.trim());
+                                                        return (
+                                                            <div key={i} className={`flex items-center gap-2 text-sm p-3 rounded-2xl border transition-all font-semibold ${isLeader ? 'bg-amber-50 border-amber-200 text-amber-800 shadow-sm ring-1 ring-amber-100' : 'bg-slate-50 border-slate-100 text-slate-700'}`}>
+                                                                <Icon name="user" className="w-3.5 h-3.5 text-indigo-400" />
+                                                                <span className="truncate">{m}</span>
+                                                            </div>
+                                                        );
+                                                    })}
                                                 </div>
 
                                                 {isOpen && (
@@ -265,6 +282,12 @@
                                                             <div className="border-t border-indigo-100 pt-1 mt-1">
                                                                 <SongItem label="Família" song={rep.fam} />
                                                             </div>
+                                                            {ceiaHino !== undefined && (
+                                                                <div className="border-t border-amber-200 pt-2 mt-2 flex justify-between items-center text-amber-700 bg-white/40 p-1.5 rounded-lg">
+                                                                    <span className="text-[10px] uppercase font-black">Ceia do Senhor:</span>
+                                                                    <span className="font-black italic">{ceiaHino || "(A definir)"}</span>
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 )}
@@ -281,12 +304,11 @@
                                 )}
                             </div>
                         ) : (
-                            /* Instrumental */
                             <div className="space-y-6">
                                 {currentMonth === 0 ? filteredInstrumental.map((item, idx) => (
-                                    <div key={idx} className="bg-white rounded-3xl shadow-sm border border-slate-200 p-8">
+                                    <div key={idx} className="bg-white rounded-3xl shadow-sm border border-slate-200 p-8 shadow-sm">
                                         <div className="flex items-center gap-4 mb-8">
-                                            <div className="bg-indigo-600 text-white w-14 h-14 rounded-2xl flex flex-col items-center justify-center font-bold">
+                                            <div className="bg-indigo-600 text-white w-14 h-14 rounded-2xl flex flex-col items-center justify-center font-bold shadow-lg">
                                                 <span className="text-xs">DOM</span>
                                                 <span className="text-xl">{item.date.split('/')[0]}</span>
                                             </div>
@@ -303,28 +325,27 @@
                                     </div>
                                 )) : (
                                     <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200">
-                                        <p className="text-slate-400">Instrumental disponível apenas para Janeiro.</p>
+                                        <p className="text-slate-400 font-medium">Instrumental disponível apenas para Janeiro.</p>
                                     </div>
                                 )}
                             </div>
                         )}
 
-                        {/* Seção de Regras e Avisos */}
                         <div className="mt-12 grid gap-6 md:grid-cols-2">
-                            <div className="bg-amber-50 rounded-3xl p-8 border border-amber-100">
+                            <div className="bg-amber-50 rounded-3xl p-8 border border-amber-100 shadow-sm">
                                 <div className="flex items-center gap-3 mb-4 text-amber-700">
                                     <Icon name="alert-triangle" className="w-6 h-6" />
-                                    <h3 className="text-lg font-black uppercase">IMPREVISTOS E FALTAS</h3>
+                                    <h3 className="text-lg font-black uppercase tracking-tight">IMPREVISTOS E FALTAS</h3>
                                 </div>
                                 <p className="text-sm text-amber-900 leading-relaxed font-medium">
                                     Se você não puder estar no dia escalado, <strong>procure outra pessoa para o substituir</strong>. Após encontrar, informe a liderança sobre a mudança (ex: "Não poderei estar, Fulano me substituirá").
                                 </p>
                             </div>
 
-                            <div className="bg-indigo-900 rounded-3xl p-8 text-white">
+                            <div className="bg-indigo-900 rounded-3xl p-8 text-white shadow-lg">
                                 <div className="flex items-center gap-3 mb-4 text-indigo-300">
                                     <Icon name="info" className="w-6 h-6" />
-                                    <h3 className="text-lg font-black uppercase">ORIENTAÇÕES GERAIS</h3>
+                                    <h3 className="text-lg font-black uppercase tracking-tight">ORIENTAÇÕES GERAIS</h3>
                                 </div>
                                 <ul className="text-xs space-y-3 font-medium opacity-90 list-disc list-inside">
                                     <li><strong>Instrumental:</strong> chegar alguns minutos antes para montar o equipamento. Às 20h30 iniciaremos o ensaio com a passagem das músicas.</li>
@@ -334,8 +355,8 @@
                     </main>
 
                     <footer className="py-12 text-center text-slate-400">
-                        <p className="text-xs font-bold uppercase tracking-widest text-slate-300">© 2026 Departamento de Música</p>
-                        <p className="text-sm italic mt-1 px-4">"Tudo quanto fizerdes, fazei-o de todo o coração, como ao Senhor..." Colossenses 3:23</p>
+                        <p className="text-xs font-bold uppercase tracking-widest text-slate-300 mb-2">© 2026 Departamento de Música PIPP</p>
+                        <p className="text-sm italic px-4 text-slate-300/60 font-medium tracking-wide">"Tudo quanto fizerdes, fazei-o de todo o coração, como ao Senhor..." Colossenses 3:23</p>
                     </footer>
                 </div>
             );
