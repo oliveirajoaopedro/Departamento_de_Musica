@@ -75,7 +75,7 @@
                     ofe: "Hino 62 / 63", 
                     c1: { name: "Ajuntamento", link: "https://www.youtube.com/watch?v=f7XP_9JobKY" }, 
                     c2: { name: "Irresistível graça", link: "https://www.youtube.com/watch?v=juUSnwuXJaY" }, 
-                    fam: { name: "Te agradeço", link: null } 
+                    fam: { name: "Te agradeço", link: "https://www.youtube.com/watch?v=obx4-zFopE0" } 
                 },
                 "5": { 
                     inv: "Hino 18 / 19", 
@@ -91,7 +91,7 @@
             const ceiaHinos = {
                 "04/01": "Hino 266",
                 "01/02": "Hino 269",
-                "01/03": "", 
+                "01/03": "Hino 269", 
                 "05/04": "", 
                 "03/05": "", 
                 "07/06": ""  
@@ -141,11 +141,11 @@
                 { date: "22/02", items: { Guitarra: "Eduardo", Baixo: "Elieudene", Bateria: "Pedro", Teclado: "Déborah", Violão: "Jefferson" } },
 
                 // --- MARÇO ---
-                { date: "01/03", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
-                { date: "08/03", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
-                { date: "15/03", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
-                { date: "22/03", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
-                { date: "29/03", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+                { date: "01/03", items: { Guitarra: "Alan", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Jefferson" } },
+                { date: "08/03", items: { Guitarra: "Alan", Baixo: "João Pedro", Bateria: "Pedro", Teclado: "Déborah", Violão: "Eduardo" } },
+                { date: "15/03", items: { Guitarra: "Almir", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Filipe", Violão: "Jefferson" } },
+                { date: "22/03", items: { Guitarra: "Eduardo", Baixo: "Elieudene", Bateria: "Pedro", Teclado: "Filipe", Violão: "Alan" } },
+                { date: "29/03", items: { Guitarra: "Almir", Baixo: "Thiago", Bateria: "Pedro", Teclado: "Déborah", Violão: "Jefferson" } },
 
                 // --- ABRIL ---
                 { date: "05/04", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
@@ -260,7 +260,7 @@
                             <div className="grid gap-6 md:grid-cols-2">
                                 {filteredVocal.length > 0 ? filteredVocal.map((item, idx) => {
                                     const hasIsaura = item.members.includes("Isaura");
-                                    const rehearsal = hasIsaura ? "Terça anterior ao domingo" : "Sexta às 20:30";
+                                    const rehearsal = hasIsaura ? "Domingo após EBD" : "Domingo após EBD";
                                     const rep = blocks[item.block] || {};
                                     const ceiaHino = ceiaHinos[item.date];
                                     const isOpen = selectedDate === item.date;
@@ -380,7 +380,7 @@
                                     <h3 className="text-lg font-black uppercase tracking-tight">ORIENTAÇÕES GERAIS</h3>
                                 </div>
                                 <ul className="text-xs space-y-3 font-medium opacity-90 list-disc list-inside">
-                                    <li><strong>Instrumental:</strong> chegar alguns minutos antes para montar o equipamento. Às 20h30 iniciaremos o ensaio com a passagem das músicas.</li>
+                                    <li><strong>Instrumental:</strong> No domingo, o ensaio para a EBD terá início às 8h30. Para o culto solene, pedimos a chegada às 19h para evitar eventuais imprevistos.</li>
                                 </ul>
                             </div>
                         </div>
