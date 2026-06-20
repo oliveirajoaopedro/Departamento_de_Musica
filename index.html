@@ -4,11 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Departamento de Música PIPP</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Rastreador de carregamento: marca cada biblioteca que NAO carregou -->
+    <script>
+        window.__falhasDeCarregamento = [];
+        window.__erroDeExecucao = null;
+        window.onerror = function (msg, src, lin, col, err) {
+            window.__erroDeExecucao = (err && err.stack) ? err.stack : (msg + ' (' + src + ':' + lin + ')');
+        };
+    </script>
+
+    <!-- Bibliotecas externas (versoes fixadas = mais estavel que @latest) -->
+    <script src="https://cdn.tailwindcss.com"
+            onerror="window.__falhasDeCarregamento.push('Tailwind (estilos) — cdn.tailwindcss.com')"></script>
+    <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"
+            onerror="window.__falhasDeCarregamento.push('React — unpkg.com')"></script>
+    <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"
+            onerror="window.__falhasDeCarregamento.push('React DOM — unpkg.com')"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.26.4/babel.min.js"
+            onerror="window.__falhasDeCarregamento.push('Babel (traduz o codigo) — unpkg.com')"></script>
+    <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"
+            onerror="window.__falhasDeCarregamento.push('Lucide (icones) — unpkg.com')"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
         body { font-family: 'Inter', sans-serif; }
@@ -23,26 +38,16 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        // Adicionamos o useRef aqui
-        const { useState, useMemo, useEffect, useRef } = React;
+        const { useState, useMemo, useEffect } = React;
 
-        // Componente de Ícone blindado contra conflitos com o React
+        // Componente de Ícone para Lucide
         const Icon = ({ name, className }) => {
-            const spanRef = useRef(null);
-
             useEffect(() => {
-                if (window.lucide && spanRef.current) {
-                    window.lucide.createIcons({ root: spanRef.current });
+                if (window.lucide) {
+                    window.lucide.createIcons();
                 }
-            });
-
-            return (
-                <span 
-                    ref={spanRef}
-                    className="inline-flex items-center justify-center"
-                    dangerouslySetInnerHTML={{ __html: `<i data-lucide="${name}" class="${className || ''}"></i>` }} 
-                />
-            );
+            }, [name]);
+            return <i data-lucide={name} className={className}></i>;
         };
 
         const App = () => {
@@ -55,55 +60,56 @@
 
             // Dados de Repertório com links do YouTube
             const blocks = {
-                "1": { 
-                    inv: "Hino 03 / 04", 
-                    con: "Hino 54", 
-                    ofe: "Hino 33 / 34", 
-                    c1: { name: "136", link: "https://www.youtube.com/watch?v=4Ef_sSKPClg&t=1s" }, 
-                    c2: { name: "Cantai ao Senhor", link: "https://www.youtube.com/watch?v=hCeI1mqTiEk" }, 
-                    fam: { name: "A Ele a glória", link: "https://www.youtube.com/watch?v=Z-4MrVLdAC0" } 
+                "1": {
+                    inv: "Hino 03 / 04",
+                    con: "Hino 54",
+                    ofe: "Hino 33 / 34",
+                    c1: { name: "136", link: "https://www.youtube.com/watch?v=4Ef_sSKPClg&t=1s" },
+                    c2: { name: "Cantai ao Senhor", link: "https://www.youtube.com/watch?v=hCeI1mqTiEk" },
+                    fam: { name: "A Ele a glória", link: "https://www.youtube.com/watch?v=Z-4MrVLdAC0" }
                 },
-                "2": { 
-                    inv: "Hino 06 / 10", 
-                    con: "Hino 67", 
-                    ofe: "Hino 47 / 56", 
-                    c1: { name: "Coração igual ao Teu", link: "https://www.youtube.com/watch?v=16kT42U0f4Y" }, 
-                    c2: { name: "É teu povo", link: "https://www.youtube.com/watch?v=ySOVyOvwOtE" }, 
-                    fam: { name: "Isaías 53", link: "https://www.youtube.com/watch?v=g7zA1L96-pU" } 
+                "2": {
+                    inv: "Hino 06 / 10",
+                    con: "Hino 67",
+                    ofe: "Hino 47 / 56",
+                    c1: { name: "Coração igual ao Teu", link: "https://www.youtube.com/watch?v=16kT42U0f4Y" },
+                    c2: { name: "É teu povo", link: "https://www.youtube.com/watch?v=ySOVyOvwOtE" },
+                    fam: { name: "Isaías 53", link: "https://www.youtube.com/watch?v=g7zA1L96-pU" }
                 },
-                "3": { 
-                    inv: "Hino 11 / 13", 
-                    con: "Hino 68", 
-                    ofe: "Hino 58 / 60", 
-                    c1: { name: "Bondade de Deus", link: "https://www.youtube.com/watch?v=esodHzEXUrE" }, 
-                    c2: { name: "Mil motivos", link: "https://www.youtube.com/watch?v=IhQlArzkCLU" }, 
-                    fam: { name: "Calmo, sereno e tranquilo", link: "https://www.youtube.com/watch?v=-RSRH5wO-vU&t=1s" } 
+                "3": {
+                    inv: "Hino 11 / 13",
+                    con: "Hino 68",
+                    ofe: "Hino 58 / 60",
+                    c1: { name: "Bondade de Deus", link: "https://www.youtube.com/watch?v=esodHzEXUrE" },
+                    c2: { name: "Mil motivos", link: "https://www.youtube.com/watch?v=IhQlArzkCLU" },
+                    fam: { name: "Calmo, sereno e tranquilo", link: "https://www.youtube.com/watch?v=-RSRH5wO-vU&t=1s" }
                 },
-                "4": { 
-                    inv: "Hino 14 / 17", 
-                    con: "Hino 69", 
-                    ofe: "Hino 62 / 63", 
-                    c1: { name: "Ajuntamento", link: "https://www.youtube.com/watch?v=f7XP_9JobKY" }, 
-                    c2: { name: "Irresistível graça", link: "https://www.youtube.com/watch?v=juUSnwuXJaY" }, 
-                    fam: { name: "Aleluia", link: "https://www.youtube.com/watch?v=VnaqNSmI0rQ" } 
+                "4": {
+                    inv: "Hino 14 / 17",
+                    con: "Hino 69",
+                    ofe: "Hino 62 / 63",
+                    c1: { name: "Ajuntamento", link: "https://www.youtube.com/watch?v=f7XP_9JobKY" },
+                    c2: { name: "Irresistível graça", link: "https://www.youtube.com/watch?v=juUSnwuXJaY" },
+                    fam: { name: "Aleluia", link: "https://www.youtube.com/watch?v=VnaqNSmI0rQ" }
                 },
-                "5": { 
-                    inv: "Hino 18 / 19", 
-                    con: "Hino 70", 
-                    ofe: "Hino 64 / 92", 
-                    c1: { name: "Efésios 1", link: "https://www.youtube.com/watch?v=9Q2WJlEnLsw" }, 
-                    c2: { name: "-", link: null }, 
-                    fam: { name: "Bom pastor", link: "https://www.youtube.com/watch?v=PovjH-0byYs&t=23s" } 
+                "5": {
+                    inv: "Hino 18 / 19",
+                    con: "Hino 70",
+                    ofe: "Hino 64 / 92",
+                    c1: { name: "Efésios 1", link: "https://www.youtube.com/watch?v=9Q2WJlEnLsw" },
+                    c2: { name: "-", link: null },
+                    fam: { name: "Bom pastor", link: "https://www.youtube.com/watch?v=PovjH-0byYs&t=23s" }
                 },
             };
 
+            // Mapeamento de Hinos da Ceia (Primeiro domingo de cada mês)
             const ceiaHinos = {
                 "04/01": "Hino 266",
                 "01/02": "Hino 269",
-                "01/03": "Hino 269", 
-                "05/04": "Hino 269", 
-                "03/05": "Obrigado Jesus Pelo Seu Sangue - Rachel Novaes", 
-                "07/06": ""  
+                "01/03": "Hino 269",
+                "05/04": "Hino 269",
+                "03/05": "Obrigado Jesus Pelo Seu Sangue - Rachel Novaes",
+                "07/06": ""
             };
 
             const vocalSchedule = [
@@ -135,29 +141,41 @@
                 { date: "28/06", team: "Vocal 2", members: ["Ana Júlia", "João Pedro", "Ana Clara", "Samara"], block: "1" },
             ];
 
+            // Escala Instrumental GERAL (Janeiro a Junho 2026)
             const instrumentalSchedule = [
+                // --- JANEIRO ---
                 { date: "04/01", items: { Guitarra: "Almir", Baixo: "João Pedro", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Alan" } },
                 { date: "11/01", items: { Guitarra: "Alan", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Jefferson" } },
                 { date: "18/01", items: { Guitarra: "Eduardo", Baixo: "Thiago", Bateria: "Pedro Henrique", Teclado: "Déborah", Violão: "Jefferson" } },
                 { date: "25/01", items: { Guitarra: "Alan", Baixo: "João Pedro", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Eduardo" } },
+
+                // --- FEVEREIRO ---
                 { date: "01/02", items: { Guitarra: "Almir", Baixo: "Elieudene", Bateria: "Alan", Teclado: "Déborah", Violão: "Jefferson" } },
                 { date: "08/02", items: { Guitarra: "Alan", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Eduardo" } },
                 { date: "15/02", items: { Guitarra: "Almir", Baixo: "Thiago", Bateria: "Pedro", Teclado: "Déborah", Violão: "Alan" } },
                 { date: "22/02", items: { Guitarra: "Eduardo", Baixo: "Elieudene", Bateria: "Pedro", Teclado: "Déborah", Violão: "Jefferson" } },
+
+                // --- MARÇO ---
                 { date: "01/03", items: { Guitarra: "Alan", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Jefferson" } },
                 { date: "08/03", items: { Guitarra: "Alan", Baixo: "João Pedro", Bateria: "Pedro", Teclado: "Déborah", Violão: "Eduardo" } },
                 { date: "15/03", items: { Guitarra: "Almir", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Filipe", Violão: "Jefferson" } },
                 { date: "22/03", items: { Guitarra: "Eduardo", Baixo: "Elieudene", Bateria: "Pedro", Teclado: "Filipe", Violão: "Alan" } },
                 { date: "29/03", items: { Guitarra: "Almir", Baixo: "Thiago", Bateria: "Pedro", Teclado: "Déborah", Violão: "Jefferson" } },
+
+                // --- ABRIL ---
                 { date: "05/04", items: { Guitarra: "Alan", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Jefferson" } },
                 { date: "12/04", items: { Guitarra: "Eduardo", Baixo: "Elieudene", Bateria: "Alan", Teclado: "Filipe", Violão: "João Pedro" } },
                 { date: "19/04", items: { Guitarra: "-", Baixo: "Eduardo", Bateria: "Pedro", Teclado: "Déborah", Violão: "Jefferson" } },
                 { date: "26/04", items: { Guitarra: "Almir", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Filipe", Violão: "Alan" } },
+
+                // --- MAIO ---
                 { date: "03/05", items: { Guitarra: "Alan", Baixo: "Elieudene", Bateria: "Pedro", Teclado: "Déborah", Violão: "Jefferson" } },
                 { date: "10/05", items: { Guitarra: "Almir", Baixo: "Thiago", Bateria: "Alan", Teclado: "Filipe", Violão: "Eduardo" } },
                 { date: "17/05", items: { Guitarra: "Eduardo", Baixo: "Elieudene", Bateria: "Pedro", Teclado: "Déborah", Violão: "Jefferson" } },
                 { date: "24/05", items: { Guitarra: "Alan", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Filipe", Violão: "João Pedro" } },
                 { date: "31/05", items: { Guitarra: "Eduardo", Baixo: "João Pedro", Bateria: "Alan", Teclado: "Déborah", Violão: "Jefferson" } },
+
+                // --- JUNHO ---
                 { date: "07/06", items: { Guitarra: "Almir", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Alan" } },
                 { date: "14/06", items: { Guitarra: "Alan", Baixo: "Elieudene", Bateria: "Pedro", Teclado: "Filipe", Violão: "Jefferson" } },
                 { date: "21/06", items: { Guitarra: "-", Baixo: "Thiago", Bateria: "Alan", Teclado: "Déborah", Violão: "Almir" } },
@@ -168,14 +186,14 @@
                 return vocalSchedule.filter(item => {
                     const mIdx = parseInt(item.date.split('/')[1]) - 1;
                     const matchesMonth = mIdx === currentMonth;
-                    const matchesSearch = searchTerm === '' || 
+                    const matchesSearch = searchTerm === '' ||
                         item.members.some(m => m.toLowerCase().includes(searchTerm.toLowerCase()));
                     return matchesMonth && matchesSearch;
                 });
             }, [currentMonth, searchTerm]);
 
             const filteredInstrumental = useMemo(() => {
-                return instrumentalSchedule.filter(item => { 
+                return instrumentalSchedule.filter(item => {
                     const mIdx = parseInt(item.date.split('/')[1]) - 1;
                     const matchesMonth = mIdx === currentMonth;
                     const matchesSearch = searchTerm === '' || Object.values(item.items).some(val => val.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -190,12 +208,12 @@
 
                 return (
                     <div className="flex justify-between items-center group/song">
-                        <span className="text-indigo-400 font-medium">{label}:</span> 
+                        <span className="text-indigo-400 font-medium">{label}:</span>
                         {link ? (
-                            <a 
-                                href={link} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
+                            <a
+                                href={link}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="flex items-center gap-1.5 hover:text-indigo-600 transition-colors cursor-pointer"
                             >
                                 <span className="underline decoration-indigo-200 underline-offset-2">{name}</span>
@@ -222,9 +240,9 @@
                             </div>
                             <div className="relative">
                                 <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-300" />
-                                <input 
-                                    type="text" 
-                                    placeholder="Buscar por nome..." 
+                                <input
+                                    type="text"
+                                    placeholder="Buscar por nome..."
                                     className="bg-white/10 border border-white/20 rounded-full py-2.5 pl-10 pr-4 text-sm w-full md:w-64 focus:outline-none focus:ring-2 focus:ring-indigo-300 text-white placeholder:text-indigo-200"
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -274,7 +292,7 @@
                                                     </div>
                                                     <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-tighter">{item.team}</p>
                                                 </div>
-                                                <button 
+                                                <button
                                                     onClick={() => setSelectedDate(isOpen ? null : item.date)}
                                                     className={`px-4 py-2 rounded-full text-xs font-bold transition-colors flex items-center gap-2 ${isOpen ? 'bg-indigo-600 text-white' : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'}`}
                                                 >
@@ -320,7 +338,7 @@
                                                         </div>
                                                     </div>
                                                 )}
-                                                
+
                                                 <div className={`mt-auto pt-4 border-t border-slate-100 text-[11px] font-bold flex items-center gap-2 ${hasIsaura ? 'text-amber-600' : 'text-slate-400'}`}>
                                                     <Icon name="clock" className="w-3.5 h-3.5" />
                                                     Ensaio: {rehearsal}
@@ -393,6 +411,53 @@
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
+    </script>
+
+    <!-- DETECTOR DE TELA BRANCA: roda em JS puro (nao depende do Babel/React) -->
+    <script>
+        function mostrarDiagnostico() {
+            var root = document.getElementById('root');
+            // Se o app montou e renderizou algo, nao faz nada.
+            if (root && root.children.length > 0) return;
+
+            var faltando = [];
+            if (typeof React === 'undefined') faltando.push('React');
+            if (typeof ReactDOM === 'undefined') faltando.push('React DOM');
+            if (typeof Babel === 'undefined') faltando.push('Babel');
+
+            var msg = '';
+            if (window.__falhasDeCarregamento && window.__falhasDeCarregamento.length) {
+                msg += '<p><strong>Estas bibliotecas nao carregaram:</strong></p><ul style="margin:8px 0 0 18px">';
+                window.__falhasDeCarregamento.forEach(function (f) { msg += '<li>' + f + '</li>'; });
+                msg += '</ul>';
+            } else if (faltando.length) {
+                msg += '<p><strong>Bibliotecas indisponiveis:</strong> ' + faltando.join(', ') + '</p>';
+            }
+            if (window.__erroDeExecucao) {
+                msg += '<p style="margin-top:12px"><strong>Erro de execucao:</strong></p>'
+                     + '<pre style="white-space:pre-wrap;background:#0f172a;color:#fca5a5;padding:12px;border-radius:8px;font-size:12px;overflow:auto">'
+                     + String(window.__erroDeExecucao).replace(/</g, '&lt;') + '</pre>';
+            }
+            if (!msg) {
+                msg = '<p>Os scripts demoraram demais para responder ou foram bloqueados.</p>';
+            }
+
+            root.innerHTML =
+                '<div style="max-width:640px;margin:48px auto;padding:28px;font-family:system-ui,sans-serif;'
+              + 'background:#fff;border:1px solid #e2e8f0;border-left:6px solid #dc2626;border-radius:16px;'
+              + 'box-shadow:0 10px 30px rgba(0,0,0,.06);color:#1e293b">'
+              + '<h2 style="margin:0 0 6px;color:#dc2626;font-size:18px">Nao foi possivel carregar a pagina</h2>'
+              + '<p style="margin:0 0 14px;color:#64748b;font-size:14px">O codigo esta correto, mas os recursos abaixo nao puderam ser baixados:</p>'
+              + msg
+              + '<p style="margin-top:18px;font-size:13px;color:#475569"><strong>Como resolver:</strong></p>'
+              + '<ul style="margin:6px 0 0 18px;font-size:13px;color:#475569;line-height:1.6">'
+              + '<li>Verifique sua conexao com a internet e recarregue (F5).</li>'
+              + '<li>Desative bloqueadores de anuncios/scripts para esta pagina.</li>'
+              + '<li>Em rede corporativa/escolar, o acesso a <code>unpkg.com</code> pode estar bloqueado — tente outra rede.</li>'
+              + '</ul></div>';
+        }
+        // Espera o carregamento + uma folga para o Babel terminar de traduzir o codigo.
+        window.addEventListener('load', function () { setTimeout(mostrarDiagnostico, 2500); });
     </script>
 </body>
 </html>
