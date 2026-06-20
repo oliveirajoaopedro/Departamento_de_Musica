@@ -23,16 +23,26 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useMemo, useEffect } = React;
+        // Adicionamos o useRef aqui
+        const { useState, useMemo, useEffect, useRef } = React;
 
-        // Componente de Ícone para Lucide
+        // Componente de Ícone blindado contra conflitos com o React
         const Icon = ({ name, className }) => {
+            const spanRef = useRef(null);
+
             useEffect(() => {
-                if (window.lucide) {
-                    window.lucide.createIcons();
+                if (window.lucide && spanRef.current) {
+                    window.lucide.createIcons({ root: spanRef.current });
                 }
-            }, [name]);
-            return <i data-lucide={name} className={className}></i>;
+            });
+
+            return (
+                <span 
+                    ref={spanRef}
+                    className="inline-flex items-center justify-center"
+                    dangerouslySetInnerHTML={{ __html: `<i data-lucide="${name}" class="${className || ''}"></i>` }} 
+                />
+            );
         };
 
         const App = () => {
@@ -87,7 +97,6 @@
                 },
             };
 
-            // Mapeamento de Hinos da Ceia (Primeiro domingo de cada mês)
             const ceiaHinos = {
                 "04/01": "Hino 266",
                 "01/02": "Hino 269",
@@ -126,41 +135,29 @@
                 { date: "28/06", team: "Vocal 2", members: ["Ana Júlia", "João Pedro", "Ana Clara", "Samara"], block: "1" },
             ];
 
-            // Escala Instrumental GERAL (Janeiro a Junho 2026)
             const instrumentalSchedule = [
-                // --- JANEIRO ---
                 { date: "04/01", items: { Guitarra: "Almir", Baixo: "João Pedro", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Alan" } },
                 { date: "11/01", items: { Guitarra: "Alan", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Jefferson" } },
                 { date: "18/01", items: { Guitarra: "Eduardo", Baixo: "Thiago", Bateria: "Pedro Henrique", Teclado: "Déborah", Violão: "Jefferson" } },
                 { date: "25/01", items: { Guitarra: "Alan", Baixo: "João Pedro", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Eduardo" } },
-
-                // --- FEVEREIRO ---
                 { date: "01/02", items: { Guitarra: "Almir", Baixo: "Elieudene", Bateria: "Alan", Teclado: "Déborah", Violão: "Jefferson" } },
                 { date: "08/02", items: { Guitarra: "Alan", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Eduardo" } },
                 { date: "15/02", items: { Guitarra: "Almir", Baixo: "Thiago", Bateria: "Pedro", Teclado: "Déborah", Violão: "Alan" } },
                 { date: "22/02", items: { Guitarra: "Eduardo", Baixo: "Elieudene", Bateria: "Pedro", Teclado: "Déborah", Violão: "Jefferson" } },
-
-                // --- MARÇO ---
                 { date: "01/03", items: { Guitarra: "Alan", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Jefferson" } },
                 { date: "08/03", items: { Guitarra: "Alan", Baixo: "João Pedro", Bateria: "Pedro", Teclado: "Déborah", Violão: "Eduardo" } },
                 { date: "15/03", items: { Guitarra: "Almir", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Filipe", Violão: "Jefferson" } },
                 { date: "22/03", items: { Guitarra: "Eduardo", Baixo: "Elieudene", Bateria: "Pedro", Teclado: "Filipe", Violão: "Alan" } },
                 { date: "29/03", items: { Guitarra: "Almir", Baixo: "Thiago", Bateria: "Pedro", Teclado: "Déborah", Violão: "Jefferson" } },
-
-                // --- ABRIL ---
                 { date: "05/04", items: { Guitarra: "Alan", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Jefferson" } },
                 { date: "12/04", items: { Guitarra: "Eduardo", Baixo: "Elieudene", Bateria: "Alan", Teclado: "Filipe", Violão: "João Pedro" } },
                 { date: "19/04", items: { Guitarra: "-", Baixo: "Eduardo", Bateria: "Pedro", Teclado: "Déborah", Violão: "Jefferson" } },
                 { date: "26/04", items: { Guitarra: "Almir", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Filipe", Violão: "Alan" } },
-
-                // --- MAIO ---
                 { date: "03/05", items: { Guitarra: "Alan", Baixo: "Elieudene", Bateria: "Pedro", Teclado: "Déborah", Violão: "Jefferson" } },
                 { date: "10/05", items: { Guitarra: "Almir", Baixo: "Thiago", Bateria: "Alan", Teclado: "Filipe", Violão: "Eduardo" } },
                 { date: "17/05", items: { Guitarra: "Eduardo", Baixo: "Elieudene", Bateria: "Pedro", Teclado: "Déborah", Violão: "Jefferson" } },
                 { date: "24/05", items: { Guitarra: "Alan", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Filipe", Violão: "João Pedro" } },
                 { date: "31/05", items: { Guitarra: "Eduardo", Baixo: "João Pedro", Bateria: "Alan", Teclado: "Déborah", Violão: "Jefferson" } },
-
-                // --- JUNHO ---
                 { date: "07/06", items: { Guitarra: "Almir", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Alan" } },
                 { date: "14/06", items: { Guitarra: "Alan", Baixo: "Elieudene", Bateria: "Pedro", Teclado: "Filipe", Violão: "Jefferson" } },
                 { date: "21/06", items: { Guitarra: "-", Baixo: "Thiago", Bateria: "Alan", Teclado: "Déborah", Violão: "Almir" } },
