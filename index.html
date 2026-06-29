@@ -53,10 +53,11 @@
         const App = () => {
             const [searchTerm, setSearchTerm] = useState('');
             const [activeTab, setActiveTab] = useState('vocal');
-            const [currentMonth, setCurrentMonth] = useState(0);
+            const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
             const [selectedDate, setSelectedDate] = useState(null);
 
-            const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho"];
+            const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+            const monthsShort = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
 
             // Dados de Repertório com links do YouTube
             const blocks = {
@@ -109,7 +110,13 @@
                 "01/03": "Hino 269",
                 "05/04": "Hino 269",
                 "03/05": "Obrigado Jesus Pelo Seu Sangue - Rachel Novaes",
-                "07/06": ""
+                "07/06": "",
+                "05/07": "",
+                "02/08": "",
+                "06/09": "",
+                "04/10": "",
+                "01/11": "",
+                "06/12": ""
             };
 
             const vocalSchedule = [
@@ -139,6 +146,38 @@
                 { date: "14/06", team: "Vocal 3", members: ["Ana Clara", "Zaqueu", "Renata", "Isaura"], block: "4" },
                 { date: "21/06", team: "Vocal 1", members: ["Sofia", "João Pedro", "Lena", "Noeme"], block: "5" },
                 { date: "28/06", team: "Vocal 2", members: ["Ana Júlia", "João Pedro", "Ana Clara", "Samara"], block: "1" },
+                // --- JULHO ---
+                { date: "05/07", team: "A definir", members: ["Ana Clara", "Ana Júlia", "João Pedro", "Sofia"], block: "2" },
+                { date: "12/07", team: "A definir", members: ["Lena", "Noeme", "Zaque", "A definir"], block: "3" },
+                { date: "19/07", team: "A definir", members: ["Ana Clara", "Ana Júlia", "João Pedro", "Sofia"], block: "4" },
+                { date: "26/07", team: "A definir", members: ["Lena", "Noeme", "Zaque", "A definir"], block: "5" },
+                // --- AGOSTO ---
+                { date: "02/08", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "1" },
+                { date: "09/08", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "2" },
+                { date: "16/08", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "3" },
+                { date: "23/08", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "4" },
+                { date: "30/08", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "5" },
+                // --- SETEMBRO ---
+                { date: "06/09", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "1" },
+                { date: "13/09", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "2" },
+                { date: "20/09", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "3" },
+                { date: "27/09", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "4" },
+                // --- OUTUBRO ---
+                { date: "04/10", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "5" },
+                { date: "11/10", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "1" },
+                { date: "18/10", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "2" },
+                { date: "25/10", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "3" },
+                // --- NOVEMBRO ---
+                { date: "01/11", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "4" },
+                { date: "08/11", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "5" },
+                { date: "15/11", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "1" },
+                { date: "22/11", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "2" },
+                { date: "29/11", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "3" },
+                // --- DEZEMBRO ---
+                { date: "06/12", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "4" },
+                { date: "13/12", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "5" },
+                { date: "20/12", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "1" },
+                { date: "27/12", team: "A definir", members: ["A definir", "A definir", "A definir", "A definir"], block: "2" },
             ];
 
             // Escala Instrumental GERAL (Janeiro a Junho 2026)
@@ -180,6 +219,44 @@
                 { date: "14/06", items: { Guitarra: "Alan", Baixo: "Elieudene", Bateria: "Pedro", Teclado: "Filipe", Violão: "Jefferson" } },
                 { date: "21/06", items: { Guitarra: "-", Baixo: "Thiago", Bateria: "Alan", Teclado: "Déborah", Violão: "Almir" } },
                 { date: "28/06", items: { Guitarra: "Eduardo", Baixo: "Elieudene", Bateria: "Pedro", Teclado: "Filipe", Violão: "Jefferson" } },
+
+                // --- JULHO ---
+                { date: "05/07", items: { Guitarra: "Almir", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Déborah", Violão: "A definir" } },
+                { date: "12/07", items: { Guitarra: "Eduardo", Baixo: "A definir", Bateria: "Elieudene", Teclado: "Déborah", Violão: "Jefferson" } },
+                { date: "19/07", items: { Guitarra: "Almir", Baixo: "Thiago", Bateria: "Elieudene", Teclado: "Filipe", Violão: "A definir" } },
+                { date: "26/07", items: { Guitarra: "Eduardo", Baixo: "A definir", Bateria: "Pedro", Teclado: "Filipe", Violão: "Jefferson" } },
+
+                // --- AGOSTO ---
+                { date: "02/08", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+                { date: "09/08", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+                { date: "16/08", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+                { date: "23/08", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+                { date: "30/08", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+
+                // --- SETEMBRO ---
+                { date: "06/09", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+                { date: "13/09", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+                { date: "20/09", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+                { date: "27/09", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+
+                // --- OUTUBRO ---
+                { date: "04/10", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+                { date: "11/10", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+                { date: "18/10", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+                { date: "25/10", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+
+                // --- NOVEMBRO ---
+                { date: "01/11", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+                { date: "08/11", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+                { date: "15/11", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+                { date: "22/11", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+                { date: "29/11", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+
+                // --- DEZEMBRO ---
+                { date: "06/12", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+                { date: "13/12", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+                { date: "20/12", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
+                { date: "27/12", items: { Guitarra: "A definir", Baixo: "A definir", Bateria: "A definir", Teclado: "A definir", Violão: "A definir" } },
             ];
 
             const filteredVocal = useMemo(() => {
@@ -200,6 +277,14 @@
                     return matchesMonth && matchesSearch;
                 });
             }, [currentMonth, searchTerm]);
+
+            // Relaciona cada data ao seu bloco de repertório (definido na escala vocal),
+            // para que a escala instrumental possa exibir o repertório do mesmo domingo.
+            const blockByDate = useMemo(() => {
+                const map = {};
+                vocalSchedule.forEach(v => { map[v.date] = v.block; });
+                return map;
+            }, []);
 
             const SongItem = ({ label, song }) => {
                 if (!song) return null;
@@ -261,14 +346,19 @@
                             </button>
                         </div>
 
-                        <div className="flex items-center justify-between mb-8 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                            <button onClick={() => setCurrentMonth(p => Math.max(0, p-1))} className="p-2 hover:bg-slate-100 rounded-full transition-colors" disabled={currentMonth===0}>
-                                <Icon name="chevron-left" className="w-6 h-6" />
-                            </button>
-                            <h2 className="text-xl font-black text-indigo-900 uppercase tracking-widest">{months[currentMonth]}</h2>
-                            <button onClick={() => setCurrentMonth(p => Math.min(5, p+1))} className="p-2 hover:bg-slate-100 rounded-full transition-colors" disabled={currentMonth===5}>
-                                <Icon name="chevron-right" className="w-6 h-6" />
-                            </button>
+                        <div className="mb-8 bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+                            <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
+                                {monthsShort.map((m, i) => (
+                                    <button
+                                        key={i}
+                                        onClick={() => { setCurrentMonth(i); setSelectedDate(null); }}
+                                        className={`py-2.5 rounded-xl text-sm font-bold transition-all ${currentMonth === i ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-500 hover:bg-slate-100'}`}
+                                    >
+                                        {m}
+                                    </button>
+                                ))}
+                            </div>
+                            <h2 className="text-center text-lg font-black text-indigo-900 uppercase tracking-widest mt-4 pt-3 border-t border-slate-100">{months[currentMonth]}</h2>
                         </div>
 
                         {activeTab === 'vocal' ? (
@@ -352,15 +442,64 @@
                             </div>
                         ) : (
                             <div className="space-y-6">
-                                {filteredInstrumental.length > 0 ? filteredInstrumental.map((item, idx) => (
+                                {filteredInstrumental.length > 0 ? filteredInstrumental.map((item, idx) => {
+                                    const block = blockByDate[item.date];
+                                    const rep = blocks[block] || {};
+                                    const ceiaHino = ceiaHinos[item.date];
+                                    const isOpen = selectedDate === item.date;
+
+                                    return (
                                     <div key={idx} className="bg-white rounded-3xl shadow-sm border border-slate-200 p-8 shadow-sm">
-                                        <div className="flex items-center gap-4 mb-8">
-                                            <div className="bg-indigo-600 text-white w-14 h-14 rounded-2xl flex flex-col items-center justify-center font-bold shadow-lg">
-                                                <span className="text-xs">DOM</span>
-                                                <span className="text-xl">{item.date.split('/')[0]}</span>
+                                        <div className="flex items-center justify-between gap-4 mb-8">
+                                            <div className="flex items-center gap-4">
+                                                <div className="bg-indigo-600 text-white w-14 h-14 rounded-2xl flex flex-col items-center justify-center font-bold shadow-lg">
+                                                    <span className="text-xs">DOM</span>
+                                                    <span className="text-xl">{item.date.split('/')[0]}</span>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <h3 className="font-black text-xl text-slate-800 uppercase tracking-tight">Instrumental</h3>
+                                                    {ceiaHino !== undefined && (
+                                                        <span className="bg-amber-100 text-amber-700 text-[9px] font-black px-2 py-0.5 rounded-md uppercase border border-amber-200 shadow-sm">Ceia</span>
+                                                    )}
+                                                </div>
                                             </div>
-                                            <h3 className="font-black text-xl text-slate-800 uppercase tracking-tight">Instrumental</h3>
+                                            {block && (
+                                                <button
+                                                    onClick={() => setSelectedDate(isOpen ? null : item.date)}
+                                                    className={`px-4 py-2 rounded-full text-xs font-bold transition-colors flex items-center gap-2 shrink-0 ${isOpen ? 'bg-indigo-600 text-white' : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'}`}
+                                                >
+                                                    <Icon name="list-music" className="w-4 h-4" /> Repertório
+                                                </button>
+                                            )}
                                         </div>
+
+                                        {isOpen && block && (
+                                            <div className="mb-8 p-4 bg-indigo-50/50 rounded-2xl border border-indigo-100 repertoire-enter">
+                                                <div className="flex justify-between items-center border-b border-indigo-200 pb-1 mb-3">
+                                                    <h4 className="text-[10px] font-black text-indigo-600 uppercase tracking-widest">Músicas (Bloco {block})</h4>
+                                                    <div className="flex items-center gap-1 text-[8px] text-red-500 font-bold">
+                                                        <Icon name="play-circle" className="w-2.5 h-2.5" /> LINK YOUTUBE
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-2 text-xs font-bold text-slate-600">
+                                                    <SongItem label="Invoc" song={rep.inv} />
+                                                    <SongItem label="Contri" song={rep.con} />
+                                                    <SongItem label="Ofert" song={rep.ofe} />
+                                                    <SongItem label="Cant 1" song={rep.c1} />
+                                                    <SongItem label="Cant 2" song={rep.c2} />
+                                                    <div className="border-t border-indigo-100 pt-1 mt-1">
+                                                        <SongItem label="Família" song={rep.fam} />
+                                                    </div>
+                                                    {ceiaHino !== undefined && (
+                                                        <div className="border-t border-amber-200 pt-2 mt-2 flex justify-between items-center text-amber-700 bg-white/40 p-1.5 rounded-lg">
+                                                            <span className="text-[10px] uppercase font-black">Ceia do Senhor:</span>
+                                                            <span className="font-black italic">{ceiaHino || "(A definir)"}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )}
+
                                         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                                             {Object.entries(item.items).map(([role, member], ri) => (
                                                 <div key={ri} className="bg-slate-50 p-4 rounded-2xl border border-slate-100">
@@ -370,7 +509,8 @@
                                             ))}
                                         </div>
                                     </div>
-                                )) : (
+                                    );
+                                }) : (
                                     <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200">
                                         <p className="text-slate-400 font-medium">Nenhuma escala instrumental encontrada para este mês.</p>
                                     </div>
