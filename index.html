@@ -52,7 +52,7 @@
 
         const App = () => {
             const [searchTerm, setSearchTerm] = useState('');
-            const [activeTab, setActiveTab] = useState('vocal');
+            const [activeTab, setActiveTab] = useState('inicio');
             const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
             const [selectedDate, setSelectedDate] = useState(null);
 
@@ -323,7 +323,7 @@
                                 </h1>
                                 <p className="text-indigo-100 text-sm font-medium">Gestão de Escalas e Repertório</p>
                             </div>
-                            <div className="relative">
+                            {(activeTab === 'vocal' || activeTab === 'instrumental') && <div className="relative">
                                 <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-indigo-300" />
                                 <input
                                     type="text"
@@ -332,20 +332,78 @@
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                 />
-                            </div>
+                            </div>}
                         </div>
                     </header>
 
                     <main className="max-w-4xl mx-auto px-4 mt-8 w-full flex-grow">
-                        <div className="flex bg-white p-1 rounded-2xl shadow-sm mb-8 border border-slate-200">
-                            <button onClick={() => setActiveTab('vocal')} className={`flex-1 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${activeTab === 'vocal' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500 hover:bg-slate-50'}`}>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 bg-white p-1 rounded-2xl shadow-sm mb-8 border border-slate-200 gap-1">
+                            <button onClick={() => setActiveTab('inicio')} className={`py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${activeTab === 'inicio' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500 hover:bg-slate-50'}`}>
+                                <Icon name="house" className="w-5 h-5" /> Início
+                            </button>
+                            <button onClick={() => setActiveTab('vocal')} className={`py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${activeTab === 'vocal' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500 hover:bg-slate-50'}`}>
                                 <Icon name="users" className="w-5 h-5" /> Vocal
                             </button>
-                            <button onClick={() => setActiveTab('instrumental')} className={`flex-1 py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${activeTab === 'instrumental' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500 hover:bg-slate-50'}`}>
+                            <button onClick={() => setActiveTab('instrumental')} className={`py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${activeTab === 'instrumental' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500 hover:bg-slate-50'}`}>
                                 <Icon name="mic" className="w-5 h-5" /> Banda
+                            </button>
+                            <button onClick={() => setActiveTab('acessos')} className={`py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${activeTab === 'acessos' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500 hover:bg-slate-50'}`}>
+                                <Icon name="folder-key" className="w-5 h-5" /> Acessos
                             </button>
                         </div>
 
+                        {activeTab === 'inicio' ? (
+                            <section className="space-y-6 pb-8">
+                                <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-700 via-indigo-800 to-slate-900 px-7 py-10 sm:p-12 text-white shadow-xl">
+                                    <div className="absolute -right-12 -top-12 w-48 h-48 rounded-full bg-indigo-400/20"></div>
+                                    <div className="relative max-w-2xl">
+                                        <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-indigo-100">
+                                            <Icon name="music-2" className="w-4 h-4" /> Departamento de Música
+                                        </div>
+                                        <h2 className="mt-5 text-3xl sm:text-4xl font-black tracking-tight">Servindo com excelência, unidade e reverência.</h2>
+                                        <p className="mt-4 text-indigo-100 leading-relaxed text-base sm:text-lg">Com gratidão pelo que Deus fez em 2025, seguimos para 2026 preparados para crescer tecnicamente e caminhar como um só corpo.</p>
+                                    </div>
+                                </div>
+
+                                <div className="grid gap-6 md:grid-cols-2">
+                                    <div className="bg-white rounded-3xl p-7 border border-slate-200 shadow-sm">
+                                        <div className="w-11 h-11 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mb-5"><Icon name="heart-handshake" className="w-6 h-6" /></div>
+                                        <h3 className="font-black text-xl text-slate-800">Nossa direção</h3>
+                                        <p className="mt-3 text-sm leading-relaxed text-slate-600">Queremos conduzir a congregação em louvor com prontidão, santidade e beleza — ajudando uns aos outros em cada passo.</p>
+                                    </div>
+                                    <div className="bg-white rounded-3xl p-7 border border-slate-200 shadow-sm">
+                                        <div className="w-11 h-11 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center mb-5"><Icon name="user-plus" className="w-6 h-6" /></div>
+                                        <h3 className="font-black text-xl text-slate-800">Como ingressar na Equipe</h3>
+                                        <p className="mt-3 text-sm leading-relaxed text-slate-600">Fale com a liderança para agendarmos o processo de ingresso.</p>
+                                        <div className="mt-5 space-y-3">
+                                            <div className="flex gap-3 items-center text-sm font-semibold text-slate-700"><span className="flex w-7 h-7 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-white text-xs">1</span> Avaliação do Conselho da igreja</div>
+                                            <div className="flex gap-3 items-center text-sm font-semibold text-slate-700"><span className="flex w-7 h-7 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-white text-xs">2</span> Avaliação técnica das capacidades</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        ) : activeTab === 'acessos' ? (
+                            <section className="pb-8">
+                                <div className="bg-white rounded-3xl border border-slate-200 p-7 sm:p-10 shadow-sm">
+                                    <div className="max-w-xl">
+                                        <div className="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center mb-5"><Icon name="folder-key" className="w-6 h-6" /></div>
+                                        <h2 className="text-2xl sm:text-3xl font-black text-slate-800">Materiais do louvor</h2>
+                                        <p className="mt-2 text-slate-500">Acesse os arquivos necessários para estudar e se preparar para as escalas.</p>
+                                    </div>
+                                    <div className="mt-8 grid gap-4 md:grid-cols-3">
+                                        <a href="https://drive.google.com/drive/folders/1eRf5h4jFESJq75y5hEyCs1gtVXwOnjtH?usp=drive_link" target="_blank" rel="noopener noreferrer" className="group rounded-2xl border border-slate-200 p-5 hover:border-indigo-300 hover:shadow-md transition-all">
+                                            <Icon name="file-music" className="w-6 h-6 text-indigo-600" /><h3 className="mt-4 font-black text-slate-800">Cifras</h3><p className="mt-1 text-sm text-slate-500">Pasta com as cifras das músicas.</p><span className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-indigo-600">Abrir <Icon name="external-link" className="w-4 h-4" /></span>
+                                        </a>
+                                        <a href="https://drive.google.com/drive/folders/1Jhm8irD5CCKtzq1WpwIxNu3kDEvaQWYr?usp=drive_link" target="_blank" rel="noopener noreferrer" className="group rounded-2xl border border-slate-200 p-5 hover:border-indigo-300 hover:shadow-md transition-all">
+                                            <Icon name="repeat-2" className="w-6 h-6 text-indigo-600" /><h3 className="mt-4 font-black text-slate-800">Ciclos</h3><p className="mt-1 text-sm text-slate-500">Pasta com os ciclos das músicas.</p><span className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-indigo-600">Abrir <Icon name="external-link" className="w-4 h-4" /></span>
+                                        </a>
+                                        <a href="https://docs.google.com/spreadsheets/d/1I66kzDkrdHGLmanZ6tgO8b7DXF6vjBLF/edit?usp=drive_link&amp;ouid=113521598860334610558&amp;rtpof=true&amp;sd=true" target="_blank" rel="noopener noreferrer" className="group rounded-2xl border border-slate-200 p-5 hover:border-indigo-300 hover:shadow-md transition-all">
+                                            <Icon name="table-properties" className="w-6 h-6 text-indigo-600" /><h3 className="mt-4 font-black text-slate-800">Tonalidades</h3><p className="mt-1 text-sm text-slate-500">Planilha com tonalidades e especificações.</p><span className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-indigo-600">Abrir <Icon name="external-link" className="w-4 h-4" /></span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </section>
+                        ) : (<>
                         <div className="mb-8 bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
                             <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
                                 {monthsShort.map((m, i) => (
@@ -539,6 +597,7 @@
                                 </ul>
                             </div>
                         </div>
+                        </>)}
                     </main>
 
                     <footer className="py-12 text-center text-slate-400">
